@@ -1,0 +1,15 @@
+# import os
+# class DevelopmentConfig():
+#     DEVELOPMENT = True
+#     DEBUG = True
+#     SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
+    
+# config={
+#     "development":DevelopmentConfig
+# }
+
+import os
+class Config(object):
+    DEVELOPMENT = True
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.getenv("DATABASE_URL")
