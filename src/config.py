@@ -1,4 +1,4 @@
-# import os
+import os
 # class DevelopmentConfig():
 #     DEVELOPMENT = True
 #     DEBUG = True
@@ -8,7 +8,6 @@
 #     "development":DevelopmentConfig
 # }
 
-import os
 class Config(object):
     DEVELOPMENT = True
     DEBUG = True
