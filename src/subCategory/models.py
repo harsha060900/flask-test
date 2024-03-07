@@ -3,9 +3,9 @@ from dataclasses import dataclass
 from .. import db
 
 @dataclass
-class Category(db.Model):
+class SubCategory():
     id:int
-    cate_name:str
+    sub_cate_name:str
     cost:float
     created:datetime
     updated:datetime
@@ -15,6 +15,6 @@ class Category(db.Model):
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
 
 # Input by User Fields:
-    cate_name        = db.Column(db.String(100), nullable=False, unique=False)
+    sub_cate_name= db.Column(db.String(100), nullable=False, unique=False)
     cost=db.Column(db.Numeric(scale=2))
-    sub_cate = db.relationship('SubCategory', )
+    cate_id = db.Column(db.Integer, db.ForeignKey("category.id"))

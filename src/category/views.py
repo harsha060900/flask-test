@@ -11,18 +11,25 @@ def list_all(cateId=None):
     return jsonify(data)
 
 def createCate():
-    data = request.form.to_dict()
+    data = request.json
     res = Category(
-        cate_name=data['cate_name']
+        cate_name=data['cate_name'],
+        cost=data['cost']
     )
     db.session.add(res)
     db.session.commit()
-    return 'done'
+    return {"message":"Category created successfully"}
 
 def updateCate(cateId):
-    reqData = request.form
+    reqData = request.json
     data = Category.query.get(cateId)
+    if not data:
+        return {"message":"No records found"}
+    # for key,val in reqData.items(): 
+    #     print('aa:', data[key], key, val)
+    #     data[key] = val 
     data.cate_name = reqData['cate_name']
+    data.cost = reqData['cost']
     db.session.commit()
     res = Category.query.get(cateId)
     return jsonify(res)
