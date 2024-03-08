@@ -6,6 +6,7 @@ app = create_app('development')
 # def hello():
 #     return 'hello'
 from .category import urls
+from .subCategory import urls
 
 if __name__ == "__main__":
     app.run()
