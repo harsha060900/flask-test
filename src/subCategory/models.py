@@ -1,7 +1,6 @@
 from datetime import datetime
 from dataclasses import dataclass
 from .. import db
-from ..category.models import Category
 
 @dataclass
 class SubCategory(db.Model):
@@ -18,6 +17,6 @@ class SubCategory(db.Model):
 
 # Input by User Fields:
     sub_cate_name= db.Column(db.String(100), nullable=False, unique=False)
-    cost=db.Column(db.Numeric(scale=2))
+    cost=db.Column(db.Float)
     cate_id = db.Column(db.Integer, db.ForeignKey("category.id"))
-    cate = db.relationship('Category', back_populates="sub_category")
+    # cate = db.relationship('Category', back_populates="sub_category")

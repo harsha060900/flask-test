@@ -16,5 +16,5 @@ class Category(db.Model):
 
 # Input by User Fields:
     cate_name        = db.Column(db.String(100), nullable=False, unique=False)
-    cost=db.Column(db.Numeric(scale=2))
-    sub_cate = db.relationship('SubCategory', back_populates="category", cascade="all, delete")
+    cost=db.Column(db.Float)
+    sub_cate = db.relationship('SubCategory', backref="category", cascade="all, delete")
