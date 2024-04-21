@@ -6,7 +6,6 @@ from .. import db
 class Category(db.Model):
     id:int
     cate_name:str
-    cost:float
     created:datetime
     updated:datetime
 
@@ -16,5 +15,4 @@ class Category(db.Model):
 
 # Input by User Fields:
     cate_name        = db.Column(db.String(100), nullable=False, unique=False)
-    cost=db.Column(db.Float)
     sub_cate = db.relationship('SubCategory', backref="category", cascade="all, delete")

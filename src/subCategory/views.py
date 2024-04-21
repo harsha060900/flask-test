@@ -18,13 +18,10 @@ def createSubCate():
     cateData = Category.query.get(reqData['cate_id'])
     if not cateData:
         return{"message":"Select a category"}
-    total =  reqData['cost'] + cateData.cost
     resSubCate=SubCategory(
         sub_cate_name = reqData['sub_cate_name'],
-        cost=reqData["cost"],
         cate_id =reqData["cate_id"]
     )
-    cateData.cost = total
     db.session.add(resSubCate)
     db.session.commit()
     return{"message":"Subcategory created successfully"}
@@ -38,7 +35,6 @@ def updateSubCate(paramId):
     #     print('aa:', data[key], key, val)
     #     data[key] = val 
     data.sub_cate_name = reqData['cate_name']
-    data.cost = reqData['cost']
     data.cate_id = reqData['cate_id']
     db.session.commit()
     res = SubCategory.query.get(paramId)

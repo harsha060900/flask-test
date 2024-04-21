@@ -6,6 +6,7 @@ import uuid
 def list_all(cateId=None):
     if not cateId:
         data= Category.query.all()
+        print('data:',jsonify(data))
     else:
         data = Category.query.get(cateId)
     return jsonify(data)
@@ -14,7 +15,6 @@ def createCate():
     data = request.json
     res = Category(
         cate_name=data['cate_name'],
-        cost=data['cost']
     )
     db.session.add(res)
     db.session.commit()
@@ -29,7 +29,6 @@ def updateCate(cateId):
     #     print('aa:', data[key], key, val)
     #     data[key] = val 
     data.cate_name = reqData['cate_name']
-    data.cost = reqData['cost']
     db.session.commit()
     res = Category.query.get(cateId)
     return jsonify(res)
