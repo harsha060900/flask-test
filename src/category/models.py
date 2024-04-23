@@ -17,6 +17,6 @@ class Category(db.Model):
 
 # Input by User Fields:
     cate_name        = db.Column(db.String(100), nullable=False, unique=False)
-    isEdit =db.Column(db.Boolean)
-    isActive =db.Column(db.Boolean)
+    isEdit =db.Column(db.Boolean, default=False)
+    isActive =db.Column(db.Boolean,  default=True)
     sub_cate = db.relationship('SubCategory', backref="category", cascade="all, delete")

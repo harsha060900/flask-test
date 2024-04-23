@@ -7,6 +7,8 @@ class SubCategory(db.Model):
     id:int
     sub_cate_name:str
     cate_id:int
+    isEdit:bool
+    isActive:bool
     created:datetime
     updated:datetime
 
@@ -16,5 +18,7 @@ class SubCategory(db.Model):
 
 # Input by User Fields:
     sub_cate_name= db.Column(db.String(100), nullable=False, unique=False)
+    isEdit =db.Column(db.Boolean, default=False)
+    isActive =db.Column(db.Boolean,  default=True)
     cate_id = db.Column(db.Integer, db.ForeignKey("category.id"))
     # cate = db.relationship('Category', back_populates="sub_category")
