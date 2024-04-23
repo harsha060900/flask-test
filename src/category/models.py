@@ -6,6 +6,8 @@ from .. import db
 class Category(db.Model):
     id:int
     cate_name:str
+    isEdit:bool
+    isActive:bool
     created:datetime
     updated:datetime
 
@@ -15,4 +17,6 @@ class Category(db.Model):
 
 # Input by User Fields:
     cate_name        = db.Column(db.String(100), nullable=False, unique=False)
+    isEdit =db.Column(db.Boolean)
+    isActive =db.Column(db.Boolean)
     sub_cate = db.relationship('SubCategory', backref="category", cascade="all, delete")
