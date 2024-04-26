@@ -8,6 +8,14 @@ app = create_app('development')
 from .category import urls
 from .subCategory import urls
 
+@app.errorhandler(422)
+def internal_server_error(e):
+    return "INternal error",422
+
+@app.errorhandler(404)
+def resource_not_found(e):
+    return "Route not found", 404
+
 if __name__ == "__main__":
     app.run()
 

@@ -2,6 +2,9 @@ from flask import request, jsonify
 from .. import db
 from .models import Category
 import uuid
+from sqlalchemy import exc
+from ..schema.validators import CateValidate
+from marshmallow import ValidationError
 
 def list_all(cateId=None):
     if not cateId:
@@ -13,12 +16,26 @@ def list_all(cateId=None):
 
 def createCate():
     data = request.json
-    res = Category(
-        cate_name=data['cate_name'],
+    print('input:',data)
+    try:
+        valid=CateValidate().load(data)
+        res = Category(
+        cate_name=valid['cate_name'],
     )
-    db.session.add(res)
-    db.session.commit()
-    return {"message":"Category created successfully"}
+        db.session.add(res)
+        db.session.commit()
+        return {"message":"Category created successfully"}
+    except ValidationError as err:
+        print('error:',err)
+        return {"message":err.messages},422
+    # try:
+    #     db.session.add(res)
+    #     db.session.commit()
+    #     return {"message":"Category created successfully"}
+    # except exc.SQLAlchemyError as e :
+    #     db.session.rollback()
+    #     print('sqlerror:',AssertionError.__init__)
+    #     return jsonify(msg='Error: {}. '.format(e.__class__)), 422
 
 def updateCate(cateId):
     reqData = request.json
