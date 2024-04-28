@@ -5,8 +5,9 @@ app = create_app('development')
 # @app.route("/")
 # def hello():
 #     return 'hello'
-from .category import urls
-from .subCategory import urls
+# from .category import urls
+from .urls import subCateUrl
+from .urls import categoryUrl
 
 @app.errorhandler(422)
 def internal_server_error(e):
