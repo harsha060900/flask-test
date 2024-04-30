@@ -35,14 +35,16 @@ def updateSubCate(paramId):
     # for key,val in reqData.items(): 
     #     print('aa:', data[key], key, val)
     #     data[key] = val 
-    data.sub_cate_name = reqData['cate_name']
+    data.sub_cate_name = reqData['sub_cate_name']
     data.cate_id = reqData['cate_id']
     db.session.commit()
     res = SubCategory.query.get(paramId)
-    return {"data":res,"message":"Updated successfully"}
+    return {"data":res,"message":"Subcategory updated successfully"}
 
 def delSubCate(paramId):
     data = SubCategory.query.get(paramId)
+    if not data:
+        return {"message":"No records found"}
     db.session.delete(data)
     db.session.commit()
-    return 'Deleted'
+    return {"data":data,"message":"Subcategory deleted successfully"},200
