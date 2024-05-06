@@ -3,22 +3,21 @@ from .. import db
 from ..models.CateModel import Category
 from ..models.SubCateModel import SubCategory
 import uuid
-from ..schema.CateSchema import CateSchema,CateSerialize
+from ..schema.CateSchema import CateSchema, cate_sch
 from marshmallow import ValidationError
 
 def list_all(cateId=None):
     args=request.args.get('search')
-    # if request.args:
-    #     search=Category.query.filter(Category.cate_name.ilike('%'+args.lower()+'%')).all()
-    #     return jsonify(search),422
-    if not cateId:
-        data1 = Category.query.all()
-        data= db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all()
+    if request.args:
+        search=Category.query.filter(Category.cate_name.ilike('%'+args.lower()+'%')).all()
+        return {"data":cate_sch.dump(search)}
+    # if not cateId:
+    #     data = Category.query.all()
+        # data= db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all()
         # print('aa:',db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all())
     else:
         data = Category.query.get(cateId)
-    print('ss:',CateSerialize(data))
-    return {"message":"Category created successfully","data":data1[1]}
+    return {"data":cate_sch.dump(data)}
     # return jsonify(data1),200
 
 def createCate():
