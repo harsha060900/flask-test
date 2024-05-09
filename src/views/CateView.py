@@ -1,29 +1,27 @@
 from flask import request, jsonify
 from .. import db
 from ..models.CateModel import Category
-from ..models.SubCateModel import SubCategory
-import uuid
-from ..schema.CateSchema import CateSchema, cate_sch
 from marshmallow import ValidationError
+from ..schema.CateSchema import cateSchema,cateSchemaMany
 
 def list_all(cateId=None):
     args=request.args.get('search')
     if request.args:
         search=Category.query.filter(Category.cate_name.ilike('%'+args.lower()+'%')).all()
-        return {"data":cate_sch.dump(search)}
+        return {"data":cateSchemaMany.dump(search)}
     # if not cateId:
     #     data = Category.query.all()
         # data= db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all()
         # print('aa:',db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all())
     else:
         data = Category.query.get(cateId)
-    return {"data":cate_sch.dump(data)}
+    return {"data":cateSchemaMany.dump(data)}
     # return jsonify(data1),200
 
 def createCate():
     data = request.json
     try:
-        valid=CateSchema().load(data)
+        valid=cateSchema.load(data)
         res = Category(
         cate_name=valid['cate_name'],
     )
@@ -42,7 +40,7 @@ def updateCate(cateId):
     #     print('aa:', data[key], key, val)
     #     data[key] = val 
     try:
-        valid=CateSchema().load(reqData)
+        valid=cateSchema.load(reqData)
         dbData.cate_name = valid['cate_name']
         db.session.commit()
         return {"message":"Category updated successfully","data":dbData},200

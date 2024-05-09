@@ -8,6 +8,7 @@ app = create_app('development')
 # from .category import urls
 from .urls import subCateUrl
 from .urls import categoryUrl
+from .urls import expenseUrl
 
 @app.errorhandler(422)
 def internal_server_error(e):

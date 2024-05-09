@@ -1,5 +1,4 @@
 from marshmallow import fields,Schema
-from .. import ma
 from .SubCateSchema import SubCateSchema
 
 class CateSchema(Schema):
@@ -11,4 +10,5 @@ class CateSchema(Schema):
     # sub_cate=fields.List(fields.Nested(SubCateSchema))
 
 # CateValidate = Schema.from_dict({"cate_name" : fields.Str(required=True)})
-cate_sch = CateSchema(many=True)
+cateSchema = CateSchema()    
+cateSchemaMany = CateSchema(many=True)

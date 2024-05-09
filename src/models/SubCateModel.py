@@ -21,4 +21,5 @@ class SubCategory(db.Model):
 # Input by User Fields:
     sub_cate_name= db.Column(db.String(100), nullable=False, unique=False)
     cate_id = db.Column(db.Integer, db.ForeignKey("category.id"))
+    expense=db.relationship('Expense', backref='sub_category', cascade="all, delete")
     # cate = db.relationship('Category', back_populates="sub_category")
