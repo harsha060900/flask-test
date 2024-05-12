@@ -6,3 +6,5 @@ class SubCateSchema(Schema):
     isActive =fields.Bool()
     cate_id =fields.Int(required=True)
     sub_cate_name = fields.Str(required=True)
+
+subCateSchemaMany = SubCateSchema(many=True)

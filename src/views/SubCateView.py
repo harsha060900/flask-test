@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from .. import db
 from ..models.SubCateModel import SubCategory
-from ..schema.SubCateSchema import SubCateSchema
+from ..schema.SubCateSchema import SubCateSchema, subCateSchemaMany
 from marshmallow import ValidationError
 
 def list_all_subCate(paramId=None):
@@ -10,7 +10,7 @@ def list_all_subCate(paramId=None):
     else:
         data = SubCategory.query.get(paramId)
     if data:
-        return jsonify(data)
+        return {"data":subCateSchemaMany.dump(data)}
     else: return{"message":"No record found"}
 
 def createSubCate():
