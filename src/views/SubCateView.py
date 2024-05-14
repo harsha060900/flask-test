@@ -5,7 +5,11 @@ from ..schema.SubCateSchema import SubCateSchema, subCateSchemaMany
 from marshmallow import ValidationError
 
 def list_all_subCate(paramId=None):
-    if not paramId:
+    args=request.args.get('cate_id')
+    print('a:',args)
+    if args:
+        data = SubCategory.query.filter(SubCategory.cate_id==args)
+    elif not paramId:
         data= SubCategory.query.all()
     else:
         data = SubCategory.query.get(paramId)
