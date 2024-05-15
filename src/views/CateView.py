@@ -4,9 +4,11 @@ from ..models.CateModel import Category
 from marshmallow import ValidationError
 from ..schema.CateSchema import cateSchema,cateSchemaMany
 
-def list_all(cateId=None):
+def list_all():
     args=request.args.get('search')
-    if request.args:
+    cateId=request.args.get('cateId')
+    if request.args and not cateId:
+        print('p:',args,cateId)
         search=Category.query.filter(Category.cate_name.ilike('%'+args.lower()+'%')).all()
         return {"data":cateSchemaMany.dump(search)}
     # if not cateId:
@@ -15,7 +17,7 @@ def list_all(cateId=None):
         # print('aa:',db.session.query(Category,SubCategory).outerjoin(SubCategory, Category.id==SubCategory.cate_id).all())
     else:
         data = Category.query.get(cateId)
-    return {"data":cateSchemaMany.dump(data)}
+    return {"data":cateSchema.dump(data)}
     # return jsonify(data1),200
 
 def createCate():

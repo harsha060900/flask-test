@@ -44,3 +44,6 @@ def addExpense():
         return{"message":"Expense added successfully", "data":res}
     except ValidationError as err:
         return {"message":err.messages},422
+    
+
+# def deleteExpense(param):
