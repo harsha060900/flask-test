@@ -7,12 +7,12 @@ from ..schema.ExpenseSchema import ExpenseSchema, expSchemaMany
 from marshmallow import ValidationError
 
 def listExpense():
-    # data=Expense.query.all()
+    orderBy=request.args.get('orderBy')
     res=[]
-    data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).all()
-    # for y in data:
-    #     print("yyyy:", type(y), y)
-
+    if orderBy == "desc":
+        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.desc()).all()
+    else:
+        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.asc()).all()
     for expense, cate_name, sub_cate_name in data:
         serialize = {
             'id': expense.id,
@@ -21,12 +21,12 @@ def listExpense():
             'cateId': expense.cate_id,
             'subCateId': expense.sub_cate_id,
             'cateName': cate_name,
-            'subcateName': sub_cate_name
+            'subCateName': sub_cate_name,
+            'created':expense.created
         }
         res.append(serialize)
     # return{"data:":expSchemaMany.dump(data)},200
-    return{"message":res},200
-
+    return{"data":res},200
 
 def addExpense():
     data=request.json
@@ -45,5 +45,10 @@ def addExpense():
     except ValidationError as err:
         return {"message":err.messages},422
     
-
-# def deleteExpense(param):
+def deleteExpense(paramId):
+    data= Expense.query.get(paramId)
+    if not data:
+        return {"message":"No records found"},200
+    db.session.delete(data)
+    db.session.commit()
+    return {"message":"Expense deleted successfully","data":data},200
