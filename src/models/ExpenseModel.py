@@ -10,6 +10,7 @@ class Expense(db.Model):
     cate_id:int
     sub_cate_id:int
     amt:float
+    period:datetime
     desc:str
 
     id           = db.Column(db.Integer, primary_key=True )
@@ -20,4 +21,5 @@ class Expense(db.Model):
     cate_id=db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
     sub_cate_id=db.Column(db.Integer, db.ForeignKey("sub_category.id"))
     amt=db.Column(db.Float, nullable=False)
+    period=db.Column(db.DateTime(timezone=True))
     desc=db.Column(db.Text)

@@ -5,6 +5,7 @@ from ..models.CateModel import Category
 from ..models.SubCateModel import SubCategory
 from ..schema.ExpenseSchema import ExpenseSchema, expSchemaMany
 from marshmallow import ValidationError
+from datetime import datetime
 
 def listExpense():
     orderBy=request.args.get('orderBy')
@@ -30,6 +31,8 @@ def listExpense():
 
 def addExpense():
     data=request.json
+    # start_time = datetime.strptime(data["period"], '%Y-%m-%d %H:%M:%S')
+    # print('ss:',start_time)
     try:
         valid=ExpenseSchema().load(data)
         print("valid:", valid)
@@ -37,6 +40,7 @@ def addExpense():
             cate_id=valid["cate_id"],
             sub_cate_id=valid["sub_cate_id"],
             amt=valid["amt"],
+            period=valid["period"],
             desc=valid["desc"]
         )
         db.session.add(res)
