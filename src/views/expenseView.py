@@ -18,6 +18,7 @@ def listExpense():
         serialize = {
             'id': expense.id,
             'amt': expense.amt,
+            'period':expense.period,
             'desc': expense.desc,
             'cateId': expense.cate_id,
             'subCateId': expense.sub_cate_id,
