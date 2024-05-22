@@ -7,13 +7,30 @@ from ..schema.ExpenseSchema import ExpenseSchema, expSchemaMany
 from marshmallow import ValidationError
 from datetime import datetime
 
+# code from AI for between
+# python
+# from sqlalchemy import and_, or_
+
+# start_date = request.args.get('start_date')
+# end_date = request.args.get('end_date')
+
+# query = db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name)
+# query = query.outerjoin(Category, Expense.cate_id == Category.id)
+# query = query.outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id)
+# query = query.order_by(Expense.created.asc())
+
+# if start_date and end_date:
+#     query = query.filter(Expense.period.between(start_date, end_date))
+
+# data = query.all()
+
 def listExpense():
     orderBy=request.args.get('orderBy')
     res=[]
     if orderBy == "desc":
         data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.desc()).all()
     else:
-        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.asc()).all()
+        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).filter(Expense.period.between('','')).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.asc()).all()
     for expense, cate_name, sub_cate_name in data:
         serialize = {
             'id': expense.id,
