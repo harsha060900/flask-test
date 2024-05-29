@@ -26,11 +26,16 @@ from datetime import datetime
 
 def listExpense():
     orderBy=request.args.get('orderBy')
+    start,end=request.args.get('start'),request.args.get('end')
     res=[]
-    if orderBy == "desc":
-        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.desc()).all()
+    data=data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id)
+    if orderBy == "asc" and not end:
+        data=data.order_by(Expense.created.asc()).all()
+    elif start and end:
+        print('ssss:',start,end)
+        data=data.filter(Expense.period.between(start,end)).order_by(Expense.created.desc()).all()
     else:
-        data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).filter(Expense.period.between('','')).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).order_by(Expense.created.asc()).all()
+        data=data.order_by(Expense.created.desc()).all()
     for expense, cate_name, sub_cate_name in data:
         serialize = {
             'id': expense.id,
@@ -53,7 +58,6 @@ def addExpense():
     # print('ss:',start_time)
     try:
         valid=ExpenseSchema().load(data)
-        print("valid:", valid)
         res= Expense(
             cate_id=valid["cate_id"],
             sub_cate_id=valid["sub_cate_id"],

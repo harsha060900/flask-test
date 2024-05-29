@@ -16,7 +16,7 @@ class Category(db.Model):
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
 
 # Input by User Fields:
-    cate_name        = db.Column(db.String(100), nullable=False, unique=False, )
+    cate_name        = db.Column(db.String(100), nullable=False, unique=False )
     isEdit =db.Column(db.Boolean, default=False)
     isActive =db.Column(db.Boolean,  default=True)
     sub_cate = db.relationship('SubCategory', backref="category", cascade="all, delete")

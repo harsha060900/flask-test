@@ -8,7 +8,6 @@ def list_all():
     args=request.args.get('search')
     cateId=request.args.get('cateId')
     if request.args and not cateId:
-        print('p:',args,cateId)
         search=Category.query.filter(Category.cate_name.ilike('%'+args.lower()+'%')).all()
         return {"data":cateSchemaMany.dump(search)}
     # if not cateId:
@@ -25,7 +24,7 @@ def createCate():
     try:
         valid=cateSchema.load(data)
         res = Category(
-        cate_name=valid['cate_name'],
+        cate_name=valid['cate_name'],   
     )
         db.session.add(res)
         db.session.commit()
