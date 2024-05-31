@@ -70,6 +70,23 @@ def addExpense():
         return{"message":"Expense added successfully", "data":res}
     except ValidationError as err:
         return {"message":err.messages},422
+
+def editExpense(paramId):
+    reqData=request.json
+    data=Expense.query.get(paramId)
+    # start_time = datetime.strptime(data["period"], '%Y-%m-%d %H:%M:%S')
+    # print('ss:',start_time)
+    try:
+        valid=ExpenseSchema().load(reqData)
+        data.cate_id=valid["cate_id"],
+        data.sub_cate_id=valid["sub_cate_id"],
+        data.amt=valid["amt"],
+        data.period=valid["period"],
+        data.desc=valid["desc"]
+        db.session.commit()
+        return{"message":"Expense updated successfully", "data":data}
+    except ValidationError as err:
+        return {"message":err.messages},422
     
 def deleteExpense(paramId):
     data= Expense.query.get(paramId)
