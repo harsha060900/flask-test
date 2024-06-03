@@ -18,8 +18,9 @@ class Expense(db.Model):
     updated      = db.Column(db.DateTime(timezone=True), default=datetime.now, onupdate=datetime.now)    # The Date of the Instance Update => Changed with Every Update
 
 # Input by User
-    cate_id=db.Column(db.Integer, db.ForeignKey("category.id"), nullable=False)
+    cate_id=db.Column(db.Integer, db.ForeignKey("category.id"))
     sub_cate_id=db.Column(db.Integer, db.ForeignKey("sub_category.id"))
     amt=db.Column(db.Float, nullable=False)
-    period=db.Column(db.DateTime(timezone=True))
+    period=db.Column(db.DateTime(timezone=True), nullable=False)
     desc=db.Column(db.Text)
+    type=db.Column(db.String)

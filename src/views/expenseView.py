@@ -46,6 +46,7 @@ def listExpense():
             'subCateId': expense.sub_cate_id,
             'cateName': cate_name,
             'subCateName': sub_cate_name,
+            'type':expense.type,
             'created':expense.created
         }
         res.append(serialize)
@@ -63,7 +64,8 @@ def addExpense():
             sub_cate_id=valid["sub_cate_id"],
             amt=valid["amt"],
             period=valid["period"],
-            desc=valid["desc"]
+            desc=valid["desc"],
+            type=valid["type"]
         )
         db.session.add(res)
         db.session.commit()
