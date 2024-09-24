@@ -27,20 +27,23 @@ from sqlalchemy import func
 
 # data = query.all()
 
-def listExpense():
+async def listExpense():
     orderBy=request.args.get('orderBy')
     start,end=request.args.get('start'),request.args.get('end')
     res=[]
-    userData= User.query.with_entities(User.balance).filter(User.id==1).all()
+    userData= await User.query.with_entities(User.balance).filter(User.id==1).all()
     balance = userSchemaMany.dump(userData)[0]['balance']
-    data=data=db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id)
-    TotInc=Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="income").first()[0]
-    TotExp=Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="expense").first()[0]
-    if orderBy == "asc" and not end:
+    data=await db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id)
+    TotInc=await Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="income").first()[0]
+    TotExp=await Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="expense").first()[0]
+    if start and end:
+        data=data.filter(Expense.period.between(start,end))
+        # if orderBy == "asc":
+        #     data=data.order_by(Expense.period.asc()).all()
+        # else:
+        #     data=order_by(Expense.period.desc()).all()
+    if orderBy == "asc":
         data=data.order_by(Expense.period.asc()).all()
-    elif start and end:
-        print('ssss:',start,end)
-        data=data.filter(Expense.period.between(start,end)).order_by(Expense.period.desc()).all()
     else:
         data=data.order_by(Expense.period.desc()).all()
     for expense, cate_name, sub_cate_name in data:
