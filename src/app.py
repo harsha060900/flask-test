@@ -10,6 +10,7 @@ from .urls import subCateUrl
 from .urls import categoryUrl
 from .urls import expenseUrl
 from .urls import userUrl
+from .urls import chartUrl
 
 @app.errorhandler(422)
 def internal_server_error(e):

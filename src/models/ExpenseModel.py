@@ -12,6 +12,7 @@ class Expense(db.Model):
     amt:float
     period:datetime
     desc:str
+    type:str
 
     id           = db.Column(db.Integer, primary_key=True )
     created      = db.Column(db.DateTime(timezone=True), default=datetime.now)                           # The Date of the Instance Creation => Created one Time when Instantiation
