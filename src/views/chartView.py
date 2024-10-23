@@ -2,6 +2,7 @@ from flask import request, jsonify
 from .. import db
 import random
 import numpy as np
+from sqlalchemy import func
 from sqlalchemy import or_
 from ..schema.ExpenseSchema import ExpenseSchema, expSchemaMany
 from ..models.ExpenseModel import Expense
@@ -22,17 +23,15 @@ def expPieChart():
     start, end, filterBy = request.args.get('start'),request.args.get('end'),request.args.get('filterBy')
     # expData=Expense.query.filter(Expense.type=='expense')
     filterBy = filterBy if filterBy else None
-    joinData = db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).filter(or_(filterBy is None, Expense.cate_id==filterBy)).join(Category,Expense.cate_id==Category.id).join(SubCategory, Expense.sub_cate_id==SubCategory.id)
-    finalData = joinData.filter(Expense.period.between(start, end)).all()
-    for expense,cate_name, sub_cate_name in finalData:
+    periodData = Expense.query.filter(Expense.period.between(start, end))
+    allCateData = periodData.session.query(Expense.cate_id, Category.cate_name,func.sum(Expense.amt).label('amt')).join(Category, Expense.cate_id == Category.id).group_by(Expense.cate_id, Category.cate_name).all()
+    # joinData = db.session.query(Expense.cate_id, Category.cate_name, func.sum(Expense.amt)).filter(or_(filterBy is None, Expense.cate_id==filterBy)).join(Category,Expense.cate_id==Category.id).join(SubCategory, Expense.sub_cate_id==SubCategory.id).group_by(Expense.cate_id, Category.cate_name)
+    for cate_id,cate_name,  tot in allCateData:
         serialize={
-            'id': expense.id,
-            'expense': expense.amt,
-            'period':expense.period,
-            'cateId': expense.cate_id,
-            'subCateId': expense.sub_cate_id,
+            # 'expense': expense.amt,
+            'expense': tot,
+            'cateId': cate_id,
             'cateName': cate_name,
-            'subCateName': sub_cate_name,
             'bgColor':genColors()
         }
         data.append(serialize)
