@@ -24,20 +24,20 @@ def expPieChart():
     # expData=Expense.query.filter(Expense.type=='expense')
     filterBy = filterBy if filterBy else None
     allCateData=None
-    periodData = Expense.query.filter(Expense.period.between(start, end), or_(filterBy is None, Expense.cate_id==filterBy))
-    print("A:",periodData.all())
+    periodData = Expense.query.filter(Expense.period.between(start, end), or_(filterBy is None, Expense.cate_id==filterBy)).subquery()
     if filterBy:
-        pass
+        allCateData = db.session.query(periodData.c.sub_cate_id, SubCategory.sub_cate_name, func.sum(periodData.c.amt).label('amt')).join(SubCategory, periodData.c.sub_cate_id == SubCategory.id).group_by(periodData.c.sub_cate_id,SubCategory.sub_cate_name)
+        print("A:",allCateData.all())
     else:
         allCateData = db.session.query(periodData.c.cate_id, Category.cate_name,func.sum(periodData.c.amt).label('amt')).join(Category, periodData.c.cate_id == Category.id).group_by(periodData.c.cate_id, Category.cate_name).all()
     # joinData = db.session.query(Expense.cate_id, Category.cate_name, func.sum(Expense.amt)).filter(or_(filterBy is None, Expense.cate_id==filterBy)).join(Category,Expense.cate_id==Category.id).join(SubCategory, Expense.sub_cate_id==SubCategory.id).group_by(Expense.cate_id, Category.cate_name)
-    # for cate_id,cate_name,  tot in allCateData:
-    #     serialize={
-    #         # 'expense': expense.amt,
-    #         'expense': tot,
-    #         'cateId': cate_id,
-    #         'cateName': cate_name,
-    #         'bgColor':genColors()
-    #     }
-    #     data.append(serialize)
+    for cate_id,cate_name,  tot in allCateData:
+        serialize={
+            # 'expense': expense.amt,
+            'expense': tot,
+            'cateId': cate_id,
+            'cateName': cate_name,
+            'bgColor':genColors()
+        }
+        data.append(serialize)
     return data
