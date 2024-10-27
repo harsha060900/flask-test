@@ -19,7 +19,7 @@ def genColors(data=["zero", "one", "two", "three", "four"]):
             return color
 
 def expPieChart():
-    data=[]
+    res={'data':[], 'totExp':0}
     start, end, filterBy = request.args.get('start'),request.args.get('end'),request.args.get('filterBy')
     # expData=Expense.query.filter(Expense.type=='expense')
     filterBy = filterBy if filterBy else None
@@ -39,5 +39,6 @@ def expPieChart():
             'cateName': cate_name,
             'bgColor':genColors()
         }
-        data.append(serialize)
-    return data
+        res['data'].append(serialize)
+        res["totExp"]+=tot
+    return res
