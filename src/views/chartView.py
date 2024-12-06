@@ -11,7 +11,7 @@ from ..models.SubCateModel import SubCategory
 
 generated_colors = set()
 
-def genColors(data=["zero", "one", "two", "three", "four"]):
+def genColors():
     while True:
         color = "#{:06x}".format(random.randint(0, 0xFFFFFF))
         if color not in generated_colors:
@@ -27,7 +27,6 @@ def expPieChart():
     periodData = Expense.query.filter(Expense.period.between(start, end), or_(filterBy is None, Expense.cate_id==filterBy)).subquery()
     if filterBy:
         allCateData = db.session.query(periodData.c.sub_cate_id, SubCategory.sub_cate_name, func.sum(periodData.c.amt).label('amt')).join(SubCategory, periodData.c.sub_cate_id == SubCategory.id).group_by(periodData.c.sub_cate_id,SubCategory.sub_cate_name)
-        print("A:",allCateData.all())
     else:
         allCateData = db.session.query(periodData.c.cate_id, Category.cate_name,func.sum(periodData.c.amt).label('amt')).join(Category, periodData.c.cate_id == Category.id).group_by(periodData.c.cate_id, Category.cate_name).all()
     # joinData = db.session.query(Expense.cate_id, Category.cate_name, func.sum(Expense.amt)).filter(or_(filterBy is None, Expense.cate_id==filterBy)).join(Category,Expense.cate_id==Category.id).join(SubCategory, Expense.sub_cate_id==SubCategory.id).group_by(Expense.cate_id, Category.cate_name)
@@ -42,3 +41,7 @@ def expPieChart():
         res['data'].append(serialize)
         res["totExp"]+=tot
     return res
+
+def moneyFlowChart():
+
+    return True
