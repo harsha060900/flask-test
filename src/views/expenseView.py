@@ -8,7 +8,7 @@ from ..schema.ExpenseSchema import ExpenseSchema, expSchemaMany
 from ..schema.UserSchema import userSchemaMany
 from marshmallow import ValidationError
 from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 # code from AI for between
 # python
@@ -30,14 +30,15 @@ from sqlalchemy import func
 def listExpense():
     orderBy=request.args.get('orderBy')
     start,end=request.args.get('start'),request.args.get('end')
+    typeFilter= None if request.args.get('type')=='all' or not(request.args.get('type')) else request.args.get('type')
     res=[]
     userData=  User.query.with_entities(User.balance).filter(User.id==1).all()
     balance = userSchemaMany.dump(userData)[0]['balance']
-    data= db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id)
-    TotInc= Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="income").first()[0]
-    TotExp= Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="expense").first()[0]
-    if start and end:
-        data=data.filter(Expense.period.between(start,end))
+    data= db.session.query(Expense, Category.cate_name, SubCategory.sub_cate_name).outerjoin(Category, Expense.cate_id == Category.id).outerjoin(SubCategory, Expense.sub_cate_id == SubCategory.id).filter(Expense.period.between(start,end)).filter(or_(typeFilter is None, Expense.type==typeFilter))
+    TotInc= Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="income").filter(Expense.period.between(start,end)).first()[0]
+    TotExp= Expense.query.with_entities(func.sum(Expense.amt)).filter(Expense.type=="expense").filter(Expense.period.between(start,end)).first()[0]
+    # if start and end:
+    #     data=data.filter(Expense.period.between(start,end))
         # if orderBy == "asc":
         #     data=data.order_by(Expense.period.asc()).all()
         # else:
